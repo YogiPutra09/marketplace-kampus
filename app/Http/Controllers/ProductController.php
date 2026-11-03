@@ -109,6 +109,18 @@ class ProductController extends Controller
      */
     public function show(Product $product)
     {
+        
+        // Kunci session unik per produk
+        $sessionKey = 'viewed_product_' . $product->id;
+        
+        // Cek apakah user sudah melihat barang ini di sesi browser saat ini
+        if (! session()->has($sessionKey)) {
+            // Tambah tayangan +1 secara atomic
+            $product->increment('views');
+    
+            // Simpan kunci ke session agar refresh berikutnya tidak menambah angka
+            session()->put($sessionKey, true);
+        }
         $product->load(['user', 'category']);
 
         // Ambil maksimal 4 produk sejenis dalam kategori yang sama

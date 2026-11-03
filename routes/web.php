@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\ProductReportController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
+use App\Http\Controllers\WishlistController;
 
 // 1. Redirect halaman utama ke daftar katalog produk
 Route::get('/', [ProductController::class, 'home'])->name('home');
@@ -35,6 +36,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::delete('/products/{product}', [ProductController::class, 'destroy'])->name('products.destroy');
     Route::patch('/products/{product}/toggle-status', [ProductController::class, 'toggleStatus'])->name('products.toggleStatus');
 
+    // Fitur Wishlist
+    Route::get('/wishlist', [WishlistController::class, 'index'])->name('wishlist.index');
+    Route::post('/wishlist/{product}/toggle', [WishlistController::class, 'toggle'])->name('wishlist.toggle');
+
     // Rute Profil Bawaan Breeze
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -45,7 +50,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->name('seller.reviews.store');
     
     Route::post('/products/{product}/report', [ProductReportController::class, 'store'])
-        ->name('products.report');    
+        ->name('products.report');
 });
 
 // 4. Rute Detail Produk (Diletakkan di bawah setelah create)

@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Support\Facades\Auth;
 
 class Product extends Model
 {
@@ -20,6 +22,7 @@ class Product extends Model
         'condition',
         'status',
         'image',
+        'views',
     ];
 
     /**
@@ -41,5 +44,21 @@ class Product extends Model
     public function reports()
     {
         return $this->hasMany(ProductReport::class);
+    }
+
+    public function favoritedBy(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'wishlists')->withTimestamps();
+    }
+
+    public function isFavoritedBy(?User $user = null): bool
+    {
+        $user = $user ?? Auth::user();
+
+        if (! $user) {
+            return false;
+        }
+
+        return $this->favoritedBy()->where('user_id', $user->id)->exists();
     }
 }

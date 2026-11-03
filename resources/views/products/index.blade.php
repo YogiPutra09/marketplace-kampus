@@ -97,21 +97,23 @@
             @if ($products->count() > 0)
                 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                     @foreach ($products as $product)
-                        <div class="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm hover:shadow-md transition flex flex-col">
-                            <div class="aspect-square bg-gray-100 relative overflow-hidden">
-                                @if ($product->image)
-                                    <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->title }}" class="w-full h-full object-cover">
-                                @else
-                                    <div class="w-full h-full flex items-center justify-center text-xs text-gray-400">
-                                        No Image
-                                    </div>
-                                @endif
-                                <span class="absolute top-2 left-2 bg-white/90 backdrop-blur-sm text-xs font-semibold px-2 py-0.5 rounded text-gray-700">
-                                    {{ $product->category->name }}
-                                </span>
-                            </div>
-                            <div class="p-4 flex flex-col flex-1 justify-between">
-                                <div>
+                        <div class="bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm hover:shadow-md transition flex flex-col justify-between">
+                            
+                            <div>
+                                <div class="aspect-square bg-gray-100 relative overflow-hidden">
+                                    @if ($product->image)
+                                        <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->title }}" class="w-full h-full object-cover">
+                                    @else
+                                        <div class="w-full h-full flex items-center justify-center text-xs text-gray-400">
+                                            No Image
+                                        </div>
+                                    @endif
+                                    <span class="absolute top-2 left-2 bg-white/90 backdrop-blur-sm text-xs font-semibold px-2 py-0.5 rounded text-gray-700 shadow-xs">
+                                        {{ $product->category->name }}
+                                    </span>
+                                </div>
+
+                                <div class="p-4 pb-0">
                                     <h3 class="font-semibold text-gray-900 text-sm line-clamp-2 hover:text-indigo-600">
                                         <a href="{{ route('products.show', $product) }}">
                                             {{ $product->title }}
@@ -121,7 +123,11 @@
                                         <span class="text-xs text-gray-400 capitalize">Kondisi: {{ str_replace('_', ' ', $product->condition) }}</span>
                                     </div>
                                 </div>
-                                <div class="mt-4 pt-3 border-t border-gray-100 flex items-center justify-between">
+                            </div>
+
+                            <div class="p-4 pt-3">
+                                <!-- Harga dan Tombol Detail -->
+                                <div class="flex items-center justify-between">
                                     <span class="text-base font-bold text-indigo-600">
                                         Rp {{ number_format($product->price, 0, ',', '.') }}
                                     </span>
@@ -129,7 +135,20 @@
                                         Detail
                                     </a>
                                 </div>
+
+                                <!-- Baris Penjual & Indikator Tayangan (Views) -->
+                                <div class="mt-3 pt-2.5 border-t border-gray-100 flex items-center justify-between text-[11px] text-gray-400">
+                                    <span class="truncate max-w-[130px]">{{ $product->user->name }}</span>
+                                    <span class="flex items-center gap-1 shrink-0" title="Total dilihat">
+                                        <svg class="w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                        </svg>
+                                        {{ number_format($product->views ?? 0, 0, ',', '.') }}
+                                    </span>
+                                </div>
                             </div>
+
                         </div>
                     @endforeach
                 </div>
